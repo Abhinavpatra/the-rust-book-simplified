@@ -381,8 +381,6 @@ mod tests {
 }
 ```
 
-The output below clearly shows, that the test pass, so we can use a Result enum in place of the panic! or something else.
-
 - The it_works function now has the Result<(), String> return type. In the body of the function, rather than calling the assert_eq! macro, we return Ok(()) when the test passes and an Err with a String inside when the test fails.
 
 - Writing tests so that they return a Result<T, E> enables you to use the question mark operator in the body of tests, which can be a convenient way to write tests that should fail if any operation within them returns an Err variant.
@@ -397,21 +395,11 @@ Lets see what happens when we run our tests and explore the different options we
 1. cargo run compiles your code and then runs the resultant binary.
 2. cargo test compiles your code in test mode and runs the resultant test binary.
 
-The default behavior of the binary produced by cargo test is to run all the tests in parallel and capture output generated during test runs, preventing the output from being displayed and making it easier to read the output related to the test results.
-
-We can, however, specify command line options to change this default behavior.
-
 **Separators --**
 
 cargo test followed by the separator -- and then the ones that go to the test binary.
 
-Running cargo test --help displays the options you can use with cargo test, and running cargo test -- --help displays the options you can use after the separator. These options are also documented in the “Tests” section of The rustc Book.
-
 ### Running Tests in Parallel or Consecutively
-
-When you run multiple tests, by default they run in parallel using threads, meaning they finish running more quickly and you get feedback sooner.
-
-Because the tests are running at the same time, you must make sure your tests don’t depend on each other or on any shared state, including a shared environment, such as the current working directory or environment variables.
 
 If you don’t want to run the tests in parallel or if you want more fine-grained control over the number of threads used, you can send the --test-threads flag and the number of threads you want to use to the test binary. Take a look at the following example:
 
@@ -424,8 +412,6 @@ We set the number of test threads to 1, telling the program not to use any paral
 Running the tests using one thread will take longer than running them in parallel, but the tests won’t interfere with each other if they share state.
 
 ### Showing Function Output
-
-If a test passes, the test library captures anything printed to standard output. Like, if we call println! in a test and the test passes, we won’t see the println! output in the terminal, we’ll see only the line that indicates the test passed. If a test fails, we’ll see whatever was printed to standard output with the rest of the failure message.
 
 Lets take a function that prints the value of its parameter and returns 10, as well as a test that passes and a test that fails.
 
@@ -490,10 +476,6 @@ Now, if we want to see printed values for passing tests as well, we can tell Rus
 
 cargo test -- --show-output
 
-and then we get the output for both passes and failure, as below:
-
-Above we can see "I got the value 4" and success alongside it, since the test passed.
-
 ### Running a Subset of Tests by Name
 
 Running a full test suite can sometimes take a long time, especially if you are working on only a certain small sections, and just want to check if those sections work.
@@ -540,8 +522,6 @@ test tests::one_hundred ... ok
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
 
 ```
-
-We can’t specify the names of multiple tests in this way; only the first value given to cargo test will be used. But there is a way to run multiple specific tests.
 
 **Filtering to Run Multiple Tests**
 
@@ -614,28 +594,12 @@ test tests::expensive_test ... ok
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 10.00s
 ```
 
-By controlling which tests run, you can make sure your cargo test results will be returned quickly. When you’re at a point where it makes sense to check the results of the ignored tests and you have time to wait for the results or have finished implementing those sections, then you can run it at your own leisure.
-
 ## Test Organization
-
-Testing is a complex discipline, and different people use different libraries and organization techniques. The Rust community thinks about tests in terms of two main categories: unit tests and integration tests.
 
 1. Unit tests: Small and more focused, testing one module in isolation at a time, and can test private interfaces
 2. Integration tests: Entirely external to your library and use your code in the same way any other external code would, using only the public interface and potentially exercising multiple modules per test.
 
-Writing both kinds of tests is important to ensure that the pieces of your rust projects are doing what you wanted them to do, both separately and together.
-
 ### Unit Tests
-
-As said previously, purpose of unit tests is to test each unit of code in isolation from the rest of the code to quickly pinpoint where code is and isn’t working as expected.
-
-The convention is to create a module named tests in each file to contain the test functions and to annotate the module with cfg(test).
-
-**The tests Module and #[cfg(test)]**
-The `#[cfg(test)]` annotation on the tests module tells Rust to compile and run the test code only when you run `cargo test`, not when you run `cargo build`.
-
-- This saves compile time when you’re only building the library and saves space in the resulting compiled artifact because the tests are not included.
-- `cfg` stands for _configuration_ and tells Rust that the following item should only be included given a certain configuration option. In this case, the configuration option is `test`.
 
 **Private Function Tests**
 There’s differe opinions in the testing community, about whether or not private functions should be tested directly.
@@ -669,10 +633,7 @@ we can use `use super::*;` to bring it into scope and test it directly.
 
 ### Integration Tests
 
-Integration tests are entirely external to your library. They use your library in the same way any other code would, which means they can only call functions that are part of your library’s public API. Their purpose is to test whether many parts of your library work together correctly.
-
 **The tests Directory**
-We create a `tests` directory at the top level of our project directory, next to `src`. Cargo knows to look for integration test files in this directory.
 
 Example structure:
 
@@ -696,19 +657,8 @@ fn it_adds_two() {
 }
 ```
 
-- We don’t need `#[cfg(test)]` in `tests/integration_test.rs` because Cargo treats the `tests` directory specially and compiles files in this directory only when we run `cargo test`.
-- Each file in the `tests` directory is compiled as its own separate crate, which is useful for creating separate scopes to more closely imitate the way end users will be using your crate.
-
 **Submodules in Integration Tests**
-As you add more integration tests, you might want to share some setup code. If you create a file like `tests/common.rs`, Rust will treat it as a test crate and try to run tests in it.
 To avoid this, we use the older naming convention for modules: create `tests/common/mod.rs` instead.
-
-- Files in subdirectories of the `tests` directory don’t get compiled as separate crates or have sections in the test output.
-
-**Integration Tests for Binary Crates**
-If our project is a binary crate that only contains a `src/main.rs` and no `src/lib.rs`, we can’t create integration tests in the `tests` directory and bring functions defined in `src/main.rs` into scope with a `use` statement.
-
-- This is one reason why Rust projects usually have a straightforward `src/main.rs` that calls logic that lives in `src/lib.rs`.
 
 ## Summary
 
