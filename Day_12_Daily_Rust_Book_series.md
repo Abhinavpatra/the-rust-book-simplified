@@ -1,13 +1,13 @@
-# Chapter 11 : Writing Automated Tests
+# Chapter 11: Writing Automated Tests
 
 <img width="364" height="157" alt="Chapter 11 topics" src="https://github.com/user-attachments/assets/a26dee1e-8a6a-49b5-8c5f-1ac79327cb64" />
 
 **Why do we write tests**
 
-- Simple reason to ascertain whether or not an operation, a series of tasks, a function call or any e2e event operates as desired.
+- A simple reason is to ascertain whether or not an operation, a series of tasks, a function call, or any e2e event operates as desired.
 
-Tests in rust are basic functions that verify, whether or not the non-test / target code is functioning in an expected manner
-Test functions typically perform these 3 actions:
+Tests in Rust are basic functions that verify whether or not the non-test / target code is functioning in an expected manner.
+Test functions typically perform these three actions:
 
 - Set up any needed data or state.
 - Run the code you want to test.
@@ -15,13 +15,13 @@ Test functions typically perform these 3 actions:
 
 ## How to write tests
 
-Lets say you want to test a simple add function.
+Let's say you want to test a simple add function.
 
 ```bash
  cargo new adder --lib
 ```
 
-this creates the crate below
+This creates the crate below.
 
 ### Structuring Test Functions
 
@@ -44,12 +44,12 @@ mod tests {
 }
 ```
 
-1. #[cfg(test)] :
-   1. excluded from normal builds (like cargo build),
-   2. module (in this case tests) is only compiled when running tests
+1. #[cfg(test)]:
+   1. Excluded from normal builds (like cargo build).
+   2. Module (in this case tests) is only compiled when running tests.
 2. #[test] annotation: This attribute indicates this is a test function, so the test runner knows to treat this function as a test.
-3. The tests are run when you run `cargo test` in the terminal
-4. use super::\* -> this line in tests module marks it as a regular module that follows the usual visibility rules
+3. The tests are run when you run `cargo test` in the terminal.
+4. use super::\* -> This line in the tests module marks it as a regular module that follows the usual visibility rules.
 
 ```bash
 
@@ -72,10 +72,10 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
 ### Explaining the output
 
-- This shows that the one test was compiled, and it ran successfully as 1 passed and 0 failed
-- Doc-tests adder is for the results of any documentation tests. Rust can compile any code examples that appear in our API documentation, and keeps your docs and your code in sync, documentation is in Chapter 14
+- This shows that the one test was compiled, and it ran successfully as 1 passed and 0 failed.
+- Doc-tests adder is for the results of any documentation tests. Rust can compile any code examples that appear in our API documentation and keeps your docs and your code in sync; documentation is in Chapter 14.
 
-### Lets customize our tests to see what failure looks like
+### Let's customize our tests to see what failure looks like
 
 ```rust
     #[test]
@@ -84,20 +84,20 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
     }
 ```
 
-here, if you add this right below the it_works test inside `mod tests{}`
+Here, if you add this right below the it_works test inside `mod tests{}`:
 
-- panic! is a macro that terminates execution, it causes the test to fail and prints an error message.
-- The output difference is what it looks like when a test fails
+- panic! is a macro that terminates execution; it causes the test to fail and prints an error message.
+- The output difference is what it looks like when a test fails.
 
 ### Checking Results with assert!
 
-assert! macro is to ensure that some condition in a test is true.
+The assert! macro is to ensure that some condition in a test is true.
 We give the `assert!` macro an argument that returns a boolean value. If the value is `true`, then the test passes. If the value is `false`, the assert! macro internally calls panic! to cause the test to fail.
 
 - Using the assert! macro helps us check that our code is functioning in the way we intend.
 
-**Lets use an example**
-in src/lib.rs
+**Let's use an example**
+In src/lib.rs
 
 ```rust
 #[derive(Debug)]
@@ -112,8 +112,8 @@ impl Rectangle {
     }
 }
 
-// above is a struct Rectangle, and an implementation on it
-// below are the tests which is explained below
+// Above is a struct Rectangle, and an implementation on it.
+// Below are the tests which are explained below.
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -134,9 +134,9 @@ mod tests {
 }
 ```
 
-We have created a test larger_can_hold_smaller to test the functionality of can_hold function to see whether or not, this function returns a correct value, for the 2 Rectangle structs with custom values, which should give true.
+We have created a test larger_can_hold_smaller to test the functionality of the can_hold function to see whether or not this function returns a correct value for the two Rectangle structs with custom values, which should give true.
 
-running cargo test will return:
+Running cargo test will return:
 
 ```bash
 
@@ -146,16 +146,15 @@ test tests::larger_can_hold_smaller ... ok
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 ```
 
-since a 5,1 can fit in 7,2 based on the functions, here we used custom values to check whether or not the function runs properly.
+Since a (5, 1) can fit in (8, 7) based on the functions, here we used custom values to check whether or not the function runs properly.
 
-There is also an easy way to check the opposite that it should be false just by using ! (not) so: assert!(!<condition>)
+There is also an easy way to check the opposite—that it should be false—just by using ! (not), so: assert!(!<condition>).
 
 ### Testing Equality with assert_eq! and assert_ne!
 
-Not all functions simply return a true or false, sometimes we want to check whether 2 values are exactly the same or even slightly different, based on the function, and how they should operate, according to us, this is a common situation: so a common test that the standard library provides a pair of macros:
+Not all functions simply return true or false; sometimes we want to check whether two values are exactly the same or even slightly different. Based on the function and how they should operate according to us, this is a common situation. The standard library provides a pair of macros to perform this test more conveniently:
 
-- `assert_eq!`and `assert_ne!` : to perform this test more conveniently.
-- These macros compare two arguments for equality or inequality, respectively.
+- `assert_eq!` and `assert_ne!`: These macros compare two arguments for equality or inequality, respectively.
 
 They’ll also print the two values if the assertion fails, which makes it easier to see why the test failed; conversely, the assert! macro only indicates that it got a false value for the == expression, without printing the values that led to the false value.
 
@@ -176,7 +175,7 @@ mod tests {
 }
 ```
 
-This should get false, and in the terminal we see clear:
+This should get false, and in the terminal we see clearly:
 
 ```bash
 running 1 test
@@ -188,26 +187,26 @@ test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 
 ```
 
-it clearly shows left: right: to show what the values were with an additional RUST_BACKTRACE = 1 suggestion to see the exact point of failure
+It clearly shows left and right values with an additional RUST_BACKTRACE = 1 suggestion to see the exact point of failure.
 
 **assert_ne!**
 
-- The assert_ne! macro will pass if the two values we give it are not equal and will fail if they are equal. This macro is most useful for cases when we’re not sure what a value will be, but we know what the value definitely shouldn’t be.
+- The assert_ne! macro will pass if the two values we give it are not equal and will fail if they are equal. This macro is most useful for cases when we’re not sure what a value will be, but we know what the value definitely shouldn't be.
 
-ex: if there is a function which is random, but the value can never be 2, then we do an assert_ne!(function(), 2) to check that the function didnt return 2
+Example: If there is a function which is random, but the value can never be 2, then we do an assert_ne!(function(), 2) to check that the function didn't return 2.
 
 _Note: Under the surface, the assert_eq! and assert_ne! macros use the operators == and !=, respectively._
 
 - When the assertions fail, these macros print their arguments using debug formatting, which means the values being compared must implement the `PartialEq` and `Debug` traits. All primitive types and most of the standard library types implement these traits.
-- For structs and enums that you define yourself, you’ll need to implement PartialEq to assert equality of those types. You’ll also need to implement Debug to print the values when the assertion fails. Because both traits are derivable traits in a simple: `#[derive(PartialEq, Debug)]` on top of a struct.
+- For structs and enums that you define yourself, you’ll need to implement PartialEq to assert equality of those types. You’ll also need to implement Debug to print the values when the assertion fails because both traits are derivable: `#[derive(PartialEq, Debug)]` on top of a struct.
 
 ### Adding Custom Failure Messages
 
-Generally lets say there are a lot of tests in your codebase, which are huge functions, so simply knowing whether or not the test failed is not enough, so we also have the ability to add custom messages, as optional arugments in all: `assert!`, `assert_eq!`, and` assert_ne!`macros.
+Generally, let's say there are a lot of tests in your codebase which are huge functions; simply knowing whether or not the test failed is not enough. We also have the ability to add custom messages as optional arguments in `assert!`, `assert_eq!`, and `assert_ne!` macros.
 
 **Example:**
 
-Lets take a src/lib.rs, the function greeting will obv just return "Hello", so the assert! will definitely fail, so the format is
+Let's take src/lib.rs; the function greeting will obviously just return "Hello!", so the assert! will definitely fail. The format is:
 
 - assert!(condition, "Error message");
 
@@ -230,19 +229,19 @@ mod tests{
 }
 ```
 
-here you see the line : Greeting did not contain name, value was `Hello!`
+Here you see the line: Greeting did not contain name, value was `Hello!`
 
-Which shows that it clearly works and that even variable can be passed in those messages as part of the error message.
+This shows that it clearly works and that even variables can be passed in those messages as part of the error message.
 
 ### Checking for panics with attribute should_panic
 
-It’s important to check that our code handles error conditions as we expect, to check whether panics! macros run when we expect it to.
+It’s important to check that our code handles error conditions as we expect, to check whether panic! macros run when we expect them to.
 
 This test should_panic passes if the code inside the function panics; the test fails if the code inside the function doesn’t panic.
 
-- #[should_panic] : this attribute basically marks a test as a must panic test.
+- #[should_panic]: This attribute basically marks a test as a must-panic test.
 - We place the #[should_panic] attribute after the #[test] attribute and before the test function it applies to.
-  Lets take this example: src/lib.rs
+  Let's take this example: src/lib.rs
 
 ```rust
 pub struct Guess {
@@ -280,15 +279,15 @@ test tests::greater_than_100 - should panic ... ok
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 ```
 
-As you can see above, the function did panic! and as a result, the test passed
+As you can see above, the function did panic! and, as a result, the test passed.
 
-Now if we were to make a minor change
+Now if we were to make a minor change:
 
 ```rust
 Guess::new(80);
 ```
 
-then it wont panic and as a result the terminal output on running the test is:
+Then it won't panic and, as a result, the terminal output on running the test is:
 
 ```bash
 running 1 test
@@ -301,7 +300,7 @@ test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 - We don’t get a very helpful message in this case, but when we look at the test function, we see that it’s annotated with #[should_panic]. The failure we got means that the code in the test function did not cause a panic.
 
 - Tests that use `should_panic` can be imprecise. A `should_panic` test would pass even if the test panics for a different reason from the one we were expecting. To make `should_panic` tests more precise, we can add an optional `expected` parameter to the `should_panic` attribute. The test harness will make sure that the failure message contains the provided text.
-- The expected parameter allows you to check the panic message: **it’s a substring match**
+- The expected parameter allows you to check the panic message: **it’s a substring match.**
 
 ```rust
 pub struct Guess {
@@ -337,7 +336,7 @@ mod tests {
 
 ```
 
-This will fail since the panic message does not contain "blah blah"
+This will fail since the panic message does not contain "blah blah".
 
 ```bash
 running 1 test
@@ -351,13 +350,13 @@ test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 ```
 
 - The failure message indicates that this test did indeed panic as we expected, but the panic message did not include the expected string.
-- When part of the panic message has : "blah blah", then the test will pass.
+- When part of the panic message contains "blah blah", then the test will pass.
 
 So then, we can figure out where our bug is.
 
 ### Using Result<T, E> in Tests
 
-The Result enum is a very useful and extensively used, we can modify our tests to return Ok(()) or Err() type.
+The Result enum is very useful and extensively used; we can modify our tests to return Ok(()) or Err() type.
 
 ```rust
 pub fn add(left: u64, right: u64) -> u64 {
@@ -385,10 +384,9 @@ mod tests {
 
 - Writing tests so that they return a Result<T, E> enables you to use the question mark operator in the body of tests, which can be a convenient way to write tests that should fail if any operation within them returns an Err variant.
 
-You can’t use the `#[should_panic]` annotation on tests that use `Result<T, E>`. To assert that an operation returns an Err variant, don’t use the question mark operator on the `Result<T, E>` value. Instead, use `assert!(value.is_err())`
+You can’t use the `#[should_panic]` annotation on tests that use `Result<T, E>`. To assert that an operation returns an Err variant, don’t use the question mark operator on the `Result<T, E>` value. Instead, use `assert!(value.is_err())`.
 
-Now that you know several ways to write tests.
-Lets see what happens when we run our tests and explore the different options we can use with cargo test.
+Now that you know several ways to write tests, let's see what happens when we run our tests and explore the different options we can use with cargo test.
 
 ## Controlling How Tests Are Run
 
@@ -397,7 +395,7 @@ Lets see what happens when we run our tests and explore the different options we
 
 **Separators --**
 
-cargo test followed by the separator -- and then the ones that go to the test binary.
+cargo test is followed by the separator -- and then the flags that go to the test binary.
 
 ### Running Tests in Parallel or Consecutively
 
@@ -413,7 +411,7 @@ Running the tests using one thread will take longer than running them in paralle
 
 ### Showing Function Output
 
-Lets take a function that prints the value of its parameter and returns 10, as well as a test that passes and a test that fails.
+Let's take a function that prints the value of its parameter and returns 10, as well as a test that passes and a test that fails.
 
 src/lib.rs
 
@@ -469,7 +467,7 @@ test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 
 ```
 
-The tests which fails
+The tests which fail:
 The output from the test that failed, "I got the value 8", appears in the section of the test summary output, which also shows the cause of the test failure.
 
 Now, if we want to see printed values for passing tests as well, we can tell Rust to also show the output of successful tests with --show-output:
@@ -478,9 +476,9 @@ cargo test -- --show-output
 
 ### Running a Subset of Tests by Name
 
-Running a full test suite can sometimes take a long time, especially if you are working on only a certain small sections, and just want to check if those sections work.
+Running a full test suite can sometimes take a long time, especially if you are working on only certain small sections and just want to check if those sections work.
 
-To show, how to only run certain tests, lets take this ex:
+To show how to only run certain tests, let's take this example:
 
 ```rust
 pub fn add_two(a: u64) -> u64 {
@@ -511,7 +509,7 @@ mod tests {
 }
 ```
 
-Now to run lets say just the one_hundred test, we can use the command: cargo test one_hundred and then the other tests will be filtered out, and only 1 test will run, as you can see below.
+Now to run, let's say, just the one_hundred test, we can use the command: cargo test one_hundred. Then the other tests will be filtered out, and only one test will run, as you can see below.
 
 ```bash
 
@@ -536,13 +534,13 @@ test tests::add_two_and_two ... ok
 test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
 ```
 
-This allows you to run 2 tests beginnin with add and filter out the one which wasn't so.
+This allows you to run two tests beginning with add and filter out the one which wasn't.
 
 ### Ignoring Tests Unless Specifically Requested
 
-Sometimes you dont want to run specific tests, for any number of reasons, from them being time consuming or for future implementations, so to exclude them during most runs of cargo test, we have an attribute called `#[ignore]` to ignore them.
+Sometimes you don't want to run specific tests for any number of reasons, from them being time-consuming to being for future implementations. To exclude them during most runs of cargo test, we have an attribute called `#[ignore]` to ignore them.
 
-Lets take an example: src/lib.rs
+Let's take an example: src/lib.rs
 
 ```rust
 pub fn add(a : u64, b : u64 ) -> u64 {
@@ -571,7 +569,7 @@ mod tests {
 }
 ```
 
-Now on running the code above with a simple cargo run it gives the below section, i.e. ignores the test
+Now, on running the code above with a simple cargo test, it gives the below section, i.e., ignores the test:
 
 ```bash
 $ cargo test
@@ -583,8 +581,8 @@ test result: ok. 1 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; fini
 
 ```
 
-Now to run the ignored test, we use `cargo test -- --ignored`
-when we run that, the ignored test(s) are run.
+Now to run the ignored test, we use `cargo test -- --ignored`.
+When we run that, the ignored test(s) are run.
 
 ```bash
 $ cargo test -- --ignored
@@ -596,13 +594,13 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; fini
 
 ## Test Organization
 
-1. Unit tests: Small and more focused, testing one module in isolation at a time, and can test private interfaces
+1. Unit tests: Small and more focused, testing one module in isolation at a time; can test private interfaces.
 2. Integration tests: Entirely external to your library and use your code in the same way any other external code would, using only the public interface and potentially exercising multiple modules per test.
 
 ### Unit Tests
 
 **Private Function Tests**
-There’s differe opinions in the testing community, about whether or not private functions should be tested directly.
+There are different opinions in the testing community about whether or not private functions should be tested directly.
 But Rust does allow you to test private functions.
 
 Example: src/lib.rs
@@ -664,9 +662,9 @@ To avoid this, we use the older naming convention for modules: create `tests/com
 
 Rust’s testing features provide a way to specify how code should function to ensure that it continues to work as you expect.
 
-1. We learnt multiple macros and attributes like: assert! assert_eq!, assert_ne!, #[cfg(test)], #[test], #[ignore], explained =, using Result enum with the tests.
+1. We learned multiple macros and attributes like assert!, assert_eq!, assert_ne!, #[cfg(test)], #[test], and #[ignore], and using the Result enum with tests.
 
-2. Different ways of structuring tests, grouping and running only certain ones, and many more of rusts features.
+2. Different ways of structuring tests, grouping and running only certain ones, and many more of Rust's features.
 
 Unit tests exercise different parts of a library separately and can test private implementation details.
 
